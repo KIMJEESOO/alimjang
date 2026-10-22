@@ -1,12 +1,13 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#2e7a5f">
-<meta name="description" content="메모 대신 칩을 눌러 선생님의 마음이 담긴 키즈노트 알림장을 완성하는 앱">
+<meta name="description" content="칩을 눌러 선생님의 마음이 담긴 키즈노트 알림장을 완성하는 앱">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="한줄알림장"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/favicon-32.png" sizes="32x32"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="icon" href="favicon-32.png" sizes="32x32"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;-webkit-text-size-adjust:100%}img{max-width:100%}[hidden]{display:none!important}button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}</style>
 </head><body>
 <title>한 줄 알림장</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -30,7 +31,7 @@
 body{background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:15px;line-height:1.55;margin:0;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 96px}
 button{font:inherit;color:inherit}
-input,select,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px 11px;min-width:0;width:100%}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px 11px;min-width:0;width:100%}
 textarea{resize:vertical}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .app{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
@@ -171,9 +172,8 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mu
 
 
 <div id="nojs" style="background:#fdecea;color:#7a1f12;border:1px solid #f2b8ae;border-radius:10px;padding:12px 14px;margin:0 auto 12px;max-width:1280px;font-size:14px;line-height:1.6">
-  <b>앱이 실행되지 않은 상태예요.</b><br>파일 미리보기에서는 앱이 작동하지 않아요. 한 줄 알림장 주소를 사파리나 크롬으로 열어 주세요.
+  <b>앱이 실행되지 않은 상태예요.</b><br>아이폰 '파일' 앱이나 카카오톡 미리보기에서는 작동하지 않아요. 한 줄 알림장 <b>주소(https://…)</b>를 사파리로 열고 '홈 화면에 추가'로 설치해 주세요.
 </div>
-
 <div id="installBar" hidden style="max-width:1280px;margin:0 auto 10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))">
  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:10px 14px;font-size:14px">
   <span id="installMsg" style="flex:1;min-width:200px"></span>
@@ -192,14 +192,13 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mu
   document.getElementById("installClose").onclick=()=>{bar.hidden=true;try{localStorage.setItem("alim:installClosed","1");}catch{}};
   if(standalone||closed)return;
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-  if(ios){msg.textContent="아이폰은 사파리 아래 공유 버튼 → '홈 화면에 추가'를 누르면 앱으로 설치돼요. 설치 후에는 인터넷 없이도 써요.";bar.hidden=false;}
+  if(ios){msg.textContent="사파리 아래쪽 공유 버튼(□↑) → '홈 화면에 추가'를 누르면 앱으로 설치돼요. 설치하면 인터넷 없이도 쓰고 기록도 안전하게 남아요.";bar.hidden=false;}
   let ev=null;
   window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();ev=e;msg.textContent="홈 화면에 설치하면 앱처럼 열리고, 인터넷 없이도 써요.";btn.hidden=false;bar.hidden=false;});
   btn.onclick=async()=>{if(!ev)return;ev.prompt();try{await ev.userChoice;}catch{}ev=null;bar.hidden=true;};
   window.addEventListener("appinstalled",()=>{bar.hidden=true;});
 })();
-</script>
-<div class="app">
+</script><div class="app">
   <header class="top">
     <h1>한 줄 알림장</h1><span class="cls" id="clsLabel"></span>
     <span class="grow"></span>
@@ -247,7 +246,7 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mu
           </div>
 
           <div class="card" id="photoCard">
-            <h3>사진 <span class="opt">올리면 사진 속 모습을 알림장에 덧붙여요</span></h3>
+            <h3>사진 <span class="opt">올린 뒤 사진 속 모습을 고르면 알림장에 덧붙여요</span></h3>
             <div class="photos" id="thumbs">
               <label class="filebtn">＋ 사진 고르기<input type="file" id="photoIn" accept="image/*" multiple></label>
             </div>
@@ -268,12 +267,7 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mu
             <h3 id="pvTitle">키즈노트에 붙여 넣을 알림장 <span class="opt" id="mode"></span></h3>
             <div class="letter" id="out" contenteditable="true" spellcheck="false" aria-label="알림장 본문, 눌러서 고칠 수 있어요"></div>
             <div class="meta"><span>글자를 눌러 바로 고칠 수 있어요</span><span id="count">0자</span></div>
-            <div class="tune" id="tune">
-              <button class="btn ghost small" type="button" data-r="short">더 짧게</button>
-              <button class="btn ghost small" type="button" data-r="warm">더 따뜻하게</button>
-              <button class="btn ghost small" type="button" data-r="formal">더 정중하게</button>
-              <button class="btn ghost small" type="button" id="regen">다시 쓰기</button>
-            </div>
+            <div class="tune" id="tune" hidden><button type="button" id="regen" hidden></button></div>
             <span class="status" id="status" aria-live="polite"></span>
           </div>
           <div class="dock">
@@ -326,6 +320,13 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mu
         <textarea id="sChips" rows="5"></textarea>
       </div>
       <div class="actions"><button class="btn" type="submit">저장</button><span class="status" id="sStatus" aria-live="polite"></span></div>
+      <div class="card">
+        <h3>백업 <span class="opt">휴대폰을 바꾸거나 다른 기기로 옮길 때</span></h3>
+        <p class="note">명단, 내 칩, 지난 알림장을 파일 하나로 저장해요. 새 기기에서 '백업 불러오기'로 그대로 옮길 수 있어요.</p>
+        <div class="actions"><button class="btn ghost small" type="button" id="bkSave">백업 파일 만들기</button>
+          <label class="btn ghost small" style="cursor:pointer">백업 불러오기<input type="file" id="bkLoad" accept=".json,application/json" style="position:absolute;opacity:0;width:1px;height:1px"></label>
+          <span class="status" id="bkStatus" aria-live="polite"></span></div>
+      </div>
       <div class="card" id="keyCard" hidden>
         <h3>AI 연결 <span class="opt">내려받은 파일 전용 · 선택</span></h3>
         <p class="note">Anthropic API 키를 넣으면 이 파일에서도 사진 분석과 AI 문장 다듬기를 쓸 수 있어요. 사용한 만큼 키 주인 계정에 요금이 나가요. 키는 이 브라우저에만 저장되니 여러 사람이 쓰는 PC에서는 넣지 마세요.</p>
@@ -340,7 +341,7 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mu
   <section class="view" id="v-feedback" role="tabpanel" aria-labelledby="tab-feedback" hidden>
     <form class="page" id="fbf" autocomplete="off">
       <h2>써 보신 느낌을 알려 주세요</h2>
-      <p class="note">2분이면 끝나요. 답변과 함께 사용 통계(완성 건수, 1명당 평균 작성 시간, AI·사진 사용 횟수)가 전달돼요. 아이 이름과 알림장 내용은 보내지 않아요.</p>
+      <p class="note">2분이면 끝나요. 다 고른 뒤 아래 버튼을 누르면 답변과 사용 통계(완성 건수, 1명당 평균 작성 시간)를 카카오톡이나 문자로 보낼 수 있어요. 아이 이름과 알림장 내용은 들어가지 않아요.</p>
       <div class="card">
         <div class="form">
           <label class="f">역할<select id="fRole"><option value="">선택</option><option>담임교사</option><option>원장</option><option>보조·연장반 교사</option><option>기타</option></select></label>
@@ -359,7 +360,7 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mu
         <label class="f">불편했던 점, 틀린 문장이 나온 경우<textarea id="fBad" rows="3" maxlength="1000"></textarea></label>
         <label class="f">있으면 바로 쓰겠다 싶은 기능<textarea id="fWant" rows="2" maxlength="600"></textarea></label>
       </div>
-      <div class="actions"><button class="btn" type="submit">의견 보내기</button><span class="status" id="fStatus" aria-live="polite"></span></div>
+      <div class="actions"><button class="btn" type="submit">의견 보내기 (카톡·문자)</button><span class="status" id="fStatus" aria-live="polite"></span></div>
       <p class="note" id="myStats"></p>
     </form>
   </section>
@@ -584,6 +585,21 @@ function signature(){if(!S.sign)return "";const w=[S.cls,S.teacher?S.teacher+" �
 function hashPick(arr,seed){let h=0;for(const c of seed)h=(h*31+c.charCodeAt(0))|0;return arr[Math.abs(h)%arr.length];}
 function grouped(it){const g={"놀이":[],"마음":[],"성장":[],"건강":[],"부탁":[]};it.chips.forEach(c=>g[catOf(c)].push(c));return g;}
 
+
+/* 칩 → 자연스러운 문장 (기본 양식용) */
+const SENT={
+ "친구에게 양보":"친구에게 먼저 양보하는 모습을 보여 주었어요.","친구를 도와줌":"어려워하는 친구를 먼저 도와주었어요.",
+ "먼저 인사함":"친구와 선생님에게 먼저 반갑게 인사했어요.","웃음 가득":"하루 내내 웃음이 가득했어요.",
+ "친구와 함께 놀이":"친구와 어울려 사이좋게 놀이했어요.","다툼 후 화해":"친구와 잠시 다툼이 있었지만 서로 마음을 나누고 화해했어요.",
+ "조금 속상해함":"조금 속상해하는 순간이 있었어요.","선생님 품에서 안정":"선생님 품에서 마음을 편안히 가라앉혔어요.",
+ "혼자 해냄":"스스로 해내는 모습을 보여 주었어요.","처음 도전함":"처음 해 보는 일에 용기 내어 도전했어요.",
+ "끝까지 집중":"끝까지 집중해서 마무리했어요.","새 말 표현":"새로운 말로 자기 생각을 표현했어요.",
+ "스스로 정리":"놀이가 끝난 뒤 스스로 정리했어요.","스스로 먹음":"스스로 숟가락을 들고 먹었어요.",
+ "배변 성공":"변기에서 배변에 성공했어요.","차례 기다림":"차례를 차분히 기다렸어요.",
+ "콧물 조금":"콧물이 조금 있었어요.","기침 조금":"기침을 조금 했어요.","체온 정상":"체온은 정상이었어요.",
+ "투약 완료":"보내 주신 약은 시간에 맞춰 먹였어요.","살짝 긁힘(소독함)":"놀이 중 살짝 긁혔는데 바로 소독했어요.",
+ "평소보다 피곤해함":"평소보다 조금 피곤해했어요."
+};
 /* AI 없이도 따뜻한 문장 — 기본 양식 */
 function ruleBased(id){
   const it=item(id),isClass=id===CLASS_ID,g=grouped(it),tone=S.tone;
@@ -599,14 +615,16 @@ function ruleBased(id){
   const acts=g["놀이"];
   if(acts.length)s+=`${josa(ni,"은","는")} ${acts.join(", ")} 시간에 즐겁게 참여했어요.`;
   if(it.photo.length){const ph=it.photo.join(", ");s+=`${acts.length?" ":""}사진에 ${ni}의 ${josa(ph,"을","를")} 담았어요.`;}
-  const moments=[...g["마음"],...g["성장"]];
-  if(moments.length)s+=`\n오늘 ${ni}의 모습: ${moments.join(", ")}.`;
+  const moments=[...g["성장"],...g["마음"]];
+  const known=moments.filter(c=>SENT[c]),custom=moments.filter(c=>!SENT[c]);
+  if(known.length){const ss=known.map(c=>SENT[c]);s+=`${acts.length||it.photo.length?"\n":""}${acts.length?"그리고 ":`${josa(ni,"은","는")} `}${ss[0]}`+(ss.length>1?" "+ss.slice(1).join(" "):"");}
+  if(custom.length)s+=`${known.length?" ":"\n"}오늘은 ${custom.join(", ")}의 모습도 기억에 남아요.`;
   if(it.extra)s+=`\n${it.extra.trim()}`;
-  if(g["건강"].length)s+=`\n건강: ${g["건강"].join(", ")}.`;
+  if(g["건강"].length)s+=`\n`+g["건강"].map(c=>SENT[c]||`${c}.`).join(" ");
   let heart;
   if(g["성장"].length)heart=hashPick([`스스로 해내는 ${ni}의 모습에 선생님도 참 뿌듯했어요. 집에서도 꼭 칭찬해 주세요.`,`어제보다 한 뼘 자란 ${ni}를 보며 선생님 마음이 벅찼어요.`],name+day.date);
   else if(g["마음"].some(x=>/양보|도와|인사|함께/.test(x)))heart=hashPick([`친구를 먼저 생각하는 ${ni}의 마음 덕분에 교실이 한결 따뜻했어요.`,`다정한 ${ni} 덕분에 오늘 우리 반에 웃음이 많았어요.`],name+day.date);
-  else if(g["마음"].some(x=>/속상|울|안정|다툼/.test(x)))heart=`조금 힘든 순간도 있었지만 ${ni}의 마음을 충분히 들어 주었어요. 내일은 더 편안하게 지낼 수 있도록 살뜰히 살필게요.`;
+  else if(g["마음"].some(x=>/속상|울|안정|다툼/.test(x)))heart=`조금 힘든 순간도 있었지만 잘 이겨 낸 ${ni}가 참 기특했어요. 내일은 더 편안하게 지낼 수 있도록 살뜰히 살필게요.`;
   else if(g["건강"].length)heart=`컨디션이 신경 쓰여 오늘은 ${ni}를 더 자주 살펴보았어요. 가정에서도 한 번 더 살펴봐 주세요.`;
   else heart=hashPick([`오늘도 ${josa(ni,"과","와")} 함께여서 선생님은 참 즐거웠어요.`,`${ni}의 밝은 얼굴 덕분에 선생님도 힘이 났어요.`],name+day.date);
   if(tone==="brief")heart=heart.split(". ")[0].replace(/\.?$/,".");
@@ -738,7 +756,7 @@ $("photoIn").addEventListener("change",e=>{
   photosMem[cur]=files.map(f=>({file:f,url:URL.createObjectURL(f)}));
   renderPhotos();
   if(sampleOK()&&imagesOK)analyzePhotos();
-  else $("photoStatus").textContent=window.claude?"이 화면에서는 자동 분석을 쓸 수 없어요. 아래에서 사진 속 모습을 골라 주세요.":"자동 분석은 설정에서 AI를 연결하면 돼요. 지금은 아래에서 사진 속 모습을 골라 주세요.";
+  else $("photoStatus").textContent="아래에서 사진 속 모습을 눌러 고르세요.";
 });
 $("analyze").onclick=()=>analyzePhotos();
 async function analyzePhotos(){
@@ -848,14 +866,14 @@ $("sf").addEventListener("submit",async e=>{
   renderKids();renderEditor();renderTop();
 });
 function renderStoreNote(){$("storeNote").textContent={db:"기록은 내 Claude 계정의 개인 공간에 저장돼요. 휴대폰과 PC에서 이어 쓸 수 있고, 다른 사람은 볼 수 없어요.",
-  local:"기록은 이 브라우저에만 저장돼요. 다른 기기에서는 보이지 않아요.",memory:"저장할 수 없는 환경이에요. 만든 알림장은 바로 키즈노트로 옮겨 주세요."}[Store.mode];}
+  local:"기록은 이 휴대폰 안에만 저장돼요. 홈 화면에 설치해서 쓰면 안전하게 남아요. 기기를 바꿀 땐 위의 '백업'을 쓰세요.",memory:"저장할 수 없는 환경이에요. 만든 알림장은 바로 키즈노트로 옮겨 주세요."}[Store.mode];}
 
 /* ---------- 의견 ---------- */
 const FB={fRole:"role",fType:"type",fKids:"kids",fTime:"time",fPay:"pay",fPrice:"price",fParent:"parent",fGood:"good",fBad:"bad",fWant:"want"};
 let fStar=0;
 document.querySelectorAll("#fStar button").forEach(b=>b.onclick=()=>{fStar=Number(b.dataset.v);document.querySelectorAll("#fStar button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));});
 const fmtSecs=s=>{s=Math.round(s);return s>=60?`${Math.floor(s/60)}분 ${s%60}초`:`${s}초`;};
-const statsLine=()=>{const t=S.stats;return `완성한 알림장 ${t.letters}건 · 1명당 평균 ${t.secsN?fmtSecs(t.secsSum/t.secsN):"-"} · AI ${t.ai}회 · 사진 분석 ${t.photo}회 · 기본 양식 ${t.basic}회`;};
+const statsLine=()=>{const t=S.stats;const days=t.firstUse?Math.max(1,Math.round((Date.now()-t.firstUse)/864e5)):0;return `완성한 알림장 ${t.letters}건 · 1명당 평균 ${t.secsN?fmtSecs(t.secsSum/t.secsN):"-"} · 사용 ${days}일째 · 명단 ${S.roster.length}명`;};
 async function loadMyFeedback(){
   $("myStats").textContent="함께 전달되는 통계: "+statsLine();
   if(!Store.db||!Store.uid)return;
@@ -873,8 +891,9 @@ $("fbf").addEventListener("submit",async e=>{
   if(Store.db&&Store.uid){try{await Store.db.doc(`feedback/${Store.uid}`).set(body);ok=true;}catch{}}
   if(ok){$("fStatus").textContent="고마워요! 의견이 전달됐어요.";toast("의견을 보냈어요.");return;}
   const txt=`[한 줄 알림장 의견]\n만족도 ${body.star}/5 · ${body.role} · ${body.type} · 아이 ${body.kids??"-"}명\n시간: ${body.time} · 유료: ${body.pay} · 가격: ${body.price} · 학부모: ${body.parent}\n좋았던 점: ${body.good}\n불편한 점: ${body.bad}\n바라는 기능: ${body.want}\n${statsLine()}`;
+  if(navigator.share){try{await navigator.share({title:"한 줄 알림장 의견",text:txt});$("fStatus").className="status";$("fStatus").textContent="고마워요! 보낸 곳을 확인해 주세요.";return;}catch(e){if(e&&e.name==="AbortError"){$("fStatus").textContent="";return;}}}
   const c=await copyText(txt,$("myStats"));$("fStatus").className="status warn";
-  $("fStatus").textContent=c?"여기서는 바로 보낼 수 없어요. 내용을 복사했으니 메시지로 전달해 주세요.":"여기서는 바로 보낼 수 없어요. 답변을 직접 전달해 주세요.";
+  $("fStatus").textContent=c?"내용을 복사했어요. 카카오톡이나 문자에 붙여 넣어 보내 주세요.":"답변을 직접 전달해 주세요.";
 });
 
 /* ---------- 결과 (소유자) ---------- */
@@ -975,6 +994,32 @@ $("keyTest").onclick=async()=>{
 };
 $("keyDel").onclick=()=>{setKey("");$("sKey").value="";useKey("");$("keyStatus").textContent="키를 지웠어요.";};
 
+
+/* ---------- 백업 ---------- */
+function collectBackup(){
+  const out={app:"한줄알림장",version:1,savedAt:new Date().toISOString(),data:{}};
+  try{Object.keys(localStorage).filter(k=>k.startsWith("alim:")&&k!=="alim:apikey"&&k!=="alim:probe").forEach(k=>out.data[k]=localStorage.getItem(k));}catch{}
+  return out;
+}
+$("bkSave").onclick=async()=>{
+  if(dirty)await flush();await saving;await sSaving;
+  const body=JSON.stringify(collectBackup());const name=`한줄알림장_백업_${todayStr()}.json`;
+  const file=new File([body],name,{type:"application/json"});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],title:name});$("bkStatus").textContent="백업 파일을 보냈어요. '파일에 저장'을 고르면 아이폰에 남아요.";return;}catch(e){if(e&&e.name==="AbortError")return;}
+  }
+  const a=document.createElement("a");a.href=URL.createObjectURL(file);a.download=name;document.body.append(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);$("bkStatus").textContent="백업 파일을 저장했어요.";
+};
+$("bkLoad").addEventListener("change",async e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;
+  try{const j=JSON.parse(await f.text());
+    if(!j||j.app!=="한줄알림장"||!j.data)throw 0;
+    Object.entries(j.data).forEach(([k,v])=>{if(k.startsWith("alim:"))localStorage.setItem(k,v);});
+    $("bkStatus").textContent="불러왔어요. 잠시 뒤 다시 열려요.";setTimeout(()=>location.reload(),800);
+  }catch{$("bkStatus").textContent="한 줄 알림장 백업 파일이 아니에요.";}
+});
+
 /* ---------- 시작 ---------- */
 (async()=>{
   $("date").value=todayStr();cur=S.roster[0].id;
@@ -998,10 +1043,10 @@ $("keyDel").onclick=()=>{setKey("");$("sKey").value="";useKey("");$("keyStatus")
   try{if(Store.user&&Store.db&&await Store.user.isOwner())$("tab-results").hidden=false;}catch{}
   if(window.claude)claude.use("downloads").then(d=>{downloads=d;$("exportCsv").hidden=!d;$("rExport").hidden=!d;}).catch(()=>{});
   sample=await sP;
-  if(!window.claude){$("keyCard").hidden=false;const k=getKey();if(k){sample=makeShim(k);$("sKey").value=k;}}
+
   if(sample){try{const lim=await sample.limits();if(lim&&lim.images){imagesOK=true;maxImages=Math.min(3,lim.images.maxCount||1);$("photoIn").accept=(lim.images.mediaTypes||["image/*"]).join(",");}}catch{}}
   busy(false);renderPhotos();
-  if(!sample)$("photoNote").textContent="사진은 저장하지 않아요. 자동 분석은 설정에서 AI를 연결하면 쓸 수 있고, 지금은 사진 속 모습을 직접 골라 넣을 수 있어요.";
+  $("photoNote").textContent="사진은 알림장 문장을 만드는 데만 쓰고 저장하지 않아요. 키즈노트에는 사진을 따로 올려 주세요.";
 })();
 </script>
 
